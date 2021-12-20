@@ -19,16 +19,6 @@ $PROVIDERS = {
   'gitlab' => Gitlab.new
 }
 
-def default_response(body)
-  headers = {
-    'Content-Type' => 'application/json'
-  }
-
-  json = JSON.generate(body)
-
-  [200, headers, json]
-end
-
 get '/calendar' do
   calendar = {}
   $PROVIDERS.each do |name, provider|
@@ -46,7 +36,7 @@ get '/calendar' do
     end
   end
 
-  default_response(calendar)
+  body calendar
 end
 
 get '/providers' do
@@ -55,5 +45,18 @@ get '/providers' do
     provider_names.append(name)
   end
 
-  default_response(provider_names)
+  body provider_names
+end
+
+after do
+  status 200
+
+  headers \
+    'Content-Type' => 'application/json'
+
+  response = {
+    'data' => body
+  }
+
+  body JSON.generate(response)
 end
