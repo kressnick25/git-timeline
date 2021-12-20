@@ -7,10 +7,10 @@ require 'logger'
 
 require_all 'lib'
 # Setup CORS
-set :allow_origin, 'http://example.com http://foo.com'
-set :allow_methods, 'GET,HEAD,POST'
-set :allow_headers, 'content-type,if-modified-since'
-set :expose_headers, 'location,link'
+set(:allow_origin, 'http://example.com http://foo.com')
+set(:allow_methods, 'GET,HEAD,POST')
+set(:allow_headers, 'content-type,if-modified-since')
+set(:expose_headers, 'location,link')
 
 $CONFIG = ConfigLoader.new('credentials.yml')
 
@@ -36,7 +36,7 @@ get '/calendar' do
     end
   end
 
-  body calendar
+  body(calendar)
 end
 
 get '/providers' do
@@ -45,17 +45,17 @@ get '/providers' do
     provider_names.append(name)
   end
 
-  body provider_names
+  body(provider_names)
 end
 
 not_found do
-  status 404
+  status(404)
 
   body({})
 end
 
 after do
-  status status || 200
+  status(status || 200)
 
   headers \
     'Content-Type' => 'application/json'
@@ -65,5 +65,5 @@ after do
     'error' => status >= 400 ? status : nil
   }
 
-  body JSON.generate(response)
+  body(JSON.generate(response))
 end
