@@ -48,14 +48,21 @@ get '/providers' do
   body provider_names
 end
 
+not_found do
+  status 404
+
+  body({})
+end
+
 after do
-  status 200
+  status status || 200
 
   headers \
     'Content-Type' => 'application/json'
 
   response = {
-    'data' => body
+    'data' => body,
+    'error' => status >= 400 ? status : nil
   }
 
   body JSON.generate(response)
