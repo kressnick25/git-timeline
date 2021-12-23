@@ -14,6 +14,8 @@ set(:expose_headers, 'location,link')
 
 $CONFIG = ConfigLoader.new('credentials.yml')
 
+$CACHE = Cache.new
+
 $PROVIDERS = {
   'github' => Github.new($CONFIG.config_for('github')),
   'gitlab' => Gitlab.new
@@ -26,8 +28,10 @@ get '/calendar' do
     next unless user
 
     provider.init
-    provider_calendar = provider.calendar(user)
-    provider_calendar.each do |date, count|
+    provider_cal = $CACHE.fetch("#{name}-#{user}") do
+      provider.calendar(user)
+    end
+    provider_cal.each do |date, count|
       if calendar[date]
         calendar[date] += count
       else
