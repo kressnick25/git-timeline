@@ -27,6 +27,10 @@ class Github < Provider
     result
   end
 
+  def valid_username(username)
+    username =~ /^[a-z\d](?:[a-z\d]|-(?=[a-z\d])){0,38}$/
+  end
+
   def self.name
     'Github'
   end

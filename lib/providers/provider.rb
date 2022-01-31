@@ -12,4 +12,9 @@ class Provider
     # get calendar for a user since date provided
     raise NotImplementedError
   end
+
+  def valid_username(username)
+    # check if the username is valid for this service
+    raise NotImplementedError
+  end
 end

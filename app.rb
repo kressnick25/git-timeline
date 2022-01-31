@@ -27,6 +27,9 @@ get '/calendar' do
     user = params[name]
     next unless user
 
+    valid_user = provider.valid_username(user)
+    next unless valid_user
+
     provider.init
     provider_cal = $CACHE.fetch("#{name}-#{user}") do
       provider.calendar(user)
