@@ -12,18 +12,18 @@ set(:allow_methods, 'GET,HEAD,POST')
 set(:allow_headers, 'content-type,if-modified-since')
 set(:expose_headers, 'location,link')
 
-$CONFIG = ConfigLoader.new('credentials.yml')
-
-$CACHE = Cache.new
-
-$PROVIDERS = {
-  'github' => Github.new($CONFIG.config_for('github')),
-  'gitlab' => Gitlab.new
-}
+configure do
+  set :config, ConfigLoader.new('credentials.yml')
+  set :cache, Cache.new
+  set :providers, {
+    'github' => Github.new(settings.config.config_for('github')),
+    'gitlab' => Gitlab.new
+  }
+end
 
 get '/calendar' do
   calendar = {}
-  $PROVIDERS.each do |name, provider|
+  settings.providers.each do |name, provider|
     user = params[name]
     next unless user
 
@@ -31,7 +31,7 @@ get '/calendar' do
     next unless valid_user
 
     provider.init
-    provider_cal = $CACHE.fetch("#{name}-#{user}") do
+    provider_cal = settings.cache.fetch("#{name}-#{user}") do
       provider.calendar(user)
     end
     provider_cal.each do |date, count|
@@ -48,7 +48,7 @@ end
 
 get '/providers' do
   provider_names = []
-  $PROVIDERS.each do |name, _provider|
+  settings.providers.each do |name, _provider|
     provider_names.append(name)
   end
 
