@@ -13,10 +13,16 @@ set(:allow_headers, 'content-type,if-modified-since')
 set(:expose_headers, 'location,link')
 
 configure do
-  set :config, ConfigLoader.new('credentials.yml')
+  token_github = ENV["TOKEN_GITHUB"]
+  if token_github.nil? || token_github.empty?
+    set :config, ConfigLoader.new('credentials.yml')
+    token_github = settings.config.config_for('github')
+    raise "No token for provider 'Github'" unless !token_github.nil? && !token_github.empty?
+  end
+
   set :cache, Cache.new
   set :providers, {
-    'github' => Github.new(settings.config.config_for('github')),
+    'github' => Github.new(token_github),
     'gitlab' => Gitlab.new
   }
 end

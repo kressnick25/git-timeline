@@ -39,7 +39,7 @@ class Github < Provider
 
   def get_raw_data(user)
     url = 'https://api.github.com/graphql'
-    token = @credentials['personal-access-token']
+    token = @credentials
     now = DateTime.now()
 
     headers = {
