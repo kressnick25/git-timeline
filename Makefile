@@ -1,10 +1,11 @@
 name = git-timeline
+port = 4567
 
 build:
 	docker build --tag $(name) .
 
 run:
-	docker rm --force $(name) && docker run --name $(name) -p 4567:4567 $(name)
+	docker rm --force $(name) && docker run --name $(name) -e PORT=$(port) -p $(port):$(port) $(name)
 
 all: build run
 

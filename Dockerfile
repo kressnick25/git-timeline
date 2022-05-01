@@ -10,6 +10,8 @@ RUN bundle install
 # copy source
 COPY . /app
 
-EXPOSE 4567
+ENV PORT 4567
 
-CMD ["bundle", "exec", "rackup", "--host", "0.0.0.0", "-p", "4567"]
+EXPOSE $PORT
+
+CMD exec rackup --host 0.0.0.0 -p $PORT
