@@ -52,7 +52,7 @@ get '/providers' do
     provider_names.append(name)
   end
 
-  body(provider_names)
+  body({"providers" => provider_names})
 end
 
 not_found do
